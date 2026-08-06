@@ -2,29 +2,30 @@ import Image from "next/image";
 
 interface LogoProps {
   variant?: "icon" | "primary";
+  className?: string;
 }
 
 export default function Logo({
   variant = "primary",
+  className = "",
 }: LogoProps) {
-  if (variant === "icon") {
-    return (
-      <Image
-        src="/brand/logo/cl-monogram.svg"
-        alt="Continental Love"
-        width={48}
-        height={48}
-        priority
-      />
-    );
-  }
+  const logo =
+    variant === "icon"
+      ? "/brand/logo/cl-monogram.svg"
+      : "/brand/logo/continental-love-primary.svg";
+
+  const size =
+    variant === "icon"
+      ? { width: 48, height: 48 }
+      : { width: 180, height: 70 };
 
   return (
     <Image
-      src="/brand/logo/continental-love-primary.svg"
+      src={logo}
       alt="Continental Love"
-      width={180}
-      height={70}
+      width={size.width}
+      height={size.height}
+      className={`h-auto w-auto ${className}`}
       priority
     />
   );
