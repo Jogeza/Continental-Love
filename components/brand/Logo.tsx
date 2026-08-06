@@ -9,22 +9,18 @@ export default function Logo({
   variant = "primary",
   className = "",
 }: LogoProps) {
-  const logo =
-    variant === "icon"
-      ? "/brand/logo/cl-monogram.svg"
-      : "/brand/logo/continental-love-primary.svg";
-
-  const size =
-    variant === "icon"
-      ? { width: 48, height: 48 }
-      : { width: 180, height: 70 };
+  const isIcon = variant === "icon";
 
   return (
     <Image
-      src={logo}
+      src={
+        isIcon
+          ? "/brand/logo/cl-monogram.svg"
+          : "/brand/logo/continental-love-primary.svg"
+      }
       alt="Continental Love"
-      width={size.width}
-      height={size.height}
+      width={isIcon ? 40 : 140}
+      height={isIcon ? 40 : 54}
       className={`h-auto w-auto ${className}`}
       priority
     />
