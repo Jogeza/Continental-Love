@@ -31,15 +31,15 @@ export function FooterMenuItem({ item }: { item: Menu }) {
   );
 }
 
-export default function FooterMenu({ menu }: { menu: Menu[] }) {
+export default function FooterMenu({ menu = [] }: { menu?: Menu[] }) {
   if (!menu.length) return null;
 
   return (
     <nav>
       <ul>
-        {menu.map((item: Menu) => {
-          return <FooterMenuItem key={item.title} item={item} />;
-        })}
+        {menu.map((item: Menu) => (
+          <FooterMenuItem key={item.title} item={item} />
+        ))}
       </ul>
     </nav>
   );
