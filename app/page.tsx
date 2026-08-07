@@ -1,9 +1,15 @@
-import Logo from "@/components/brand/Logo";
+import Hero from "@/components/home/Hero";
+import BrandStory from "@/components/home/BrandStory";
+import Collections from "@/components/home/Collections";
+import Experience from "@/components/home/Experience";
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex items-center justify-center">
-      <Logo />
-    </main>
+    <>
+      <Hero />
+      <BrandStory />
+      <Collections />
+      <Experience />
+    </>
   );
 }
