@@ -1,3 +1,10 @@
+/**
+ * @deprecated Not currently rendered. This is Vercel Commerce's dynamic footer nav —
+ * it returns null unless a Shopify `menu` prop is supplied, which app/layout.tsx never
+ * did (this was the cause of the footer silently disappearing). Superseded by
+ * components/layout/Footer.tsx for now. Reintroduce this as a sub-component of the CL
+ * footer in Phase 2 once a Shopify footer menu is actually wired up.
+ */
 "use client";
 
 import clsx from "clsx";

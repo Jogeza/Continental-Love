@@ -1,3 +1,7 @@
+/**
+ * @deprecated Vercel Commerce default component — superseded by components/brand/Logo.tsx
+ * and the Continental Love brand identity. Kept for reference until Phase 2 is complete.
+ */
 import clsx from "clsx";
 
 export default function LogoIcon(props: React.ComponentProps<"svg">) {

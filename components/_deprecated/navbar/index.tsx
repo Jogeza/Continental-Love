@@ -1,5 +1,10 @@
+/**
+ * @deprecated Vercel Commerce default navbar — superseded by components/layout/Navbar.tsx.
+ * Kept for reference only until cart/search parity is merged into the Continental Love
+ * navbar in Phase 2. Not imported by any active route.
+ */
 import CartModal from "components/cart/modal";
-import LogoSquare from "components/logo-square";
+import LogoSquare from "components/_deprecated/logo-square";
 import { getMenu } from "lib/shopify";
 import { Menu } from "lib/shopify/types";
 import Link from "next/link";
