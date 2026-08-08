@@ -1,0 +1,90 @@
+@font-face {
+    font-family: Founders Grotesk Mono Light;
+    src: url(../df-refresh/Fonts/FoundersGroteskMonoWeb-Light.woff2) format("woff2");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: Founders Grotesk Mono Medium;
+    src: url(../df-refresh/Fonts/FoundersGroteskMonoWeb-Medium.woff2) format("woff2");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: Founders Grotesk Mono Regular;
+    src: url(../df-refresh/Fonts/FoundersGroteskMonoWeb-Regular.woff2) format("woff2");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: Founders Grotesk Text Medium;
+    src: url(../df-refresh/Fonts/FoundersGroteskTextWeb-Medium.woff2) format("woff2");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: Founders Grotesk text Regular;
+    src: url(../df-refresh/Fonts/FoundersGroteskTextWeb-Regular.woff2) format("woff2");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: Founders Grotesk Text Bold;
+    src: url('./Fonts/FoundersGroteskText-Bold.woff2') format('woff2'),
+        url('./Fonts/FoundersGroteskText-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: LeJeuneDeck-Light;
+    src: url(../df-refresh/Fonts/LeJeuneDeck-Light-Web.woff2) format("woff2");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: LeJeuneDeck-Regular;
+    src: url(../df-refresh/Fonts/LeJeuneDeck-Regular-Web.woff2) format("woff2");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: LeJeuneDeck-Regular-Italic;
+    src: url(../df-refresh/Fonts/LeJeuneDeck-RegularItalic-Web.woff2) format("woff2");
+    font-display: swap
+}
+
+@font-face {
+    font-family: "SackersGothicW01-Heavy";
+    src:url("../rl-com/Fonts/88d580f0-fc89-4509-99f3-49d2f3944623.eot?#iefix");
+    src:url("../rl-com/Fonts/88d580f0-fc89-4509-99f3-49d2f3944623.eot?#iefix") format("eot"),url("../rl-com/Fonts/0e382226-2fd0-4217-b22f-6624a7afc569.woff") format("woff"),url("../rl-com/Fonts/f3ef64db-65a0-40a0-9541-9628d06833dc.ttf") format("truetype"),url("../rl-com/Fonts/45232dc5-1ee3-4f9b-a68d-53248a996d78.svg#45232dc5-1ee3-4f9b-a68d-53248a996d78") format("svg");
+}
+@font-face {
+    font-family: "SackersGothicW01-Light";
+    src:url("../rl-com/Fonts/4a1690e1-e4c5-4644-bd72-2fdc50d48e44.eot?#iefix");
+    src:url("../rl-com/Fonts/4a1690e1-e4c5-4644-bd72-2fdc50d48e44.eot?#iefix") format("eot"),url("../rl-com/Fonts/558e1882-61fa-42c9-b946-2ff0b251d89e.woff") format("woff"),url("../rl-com/Fonts/51d279cf-7422-4166-bea9-d5890c7b255a.ttf") format("truetype"),url("../rl-com/Fonts/b3e01acf-acc5-4cc3-aef6-d05b5bf3e24a.svg#b3e01acf-acc5-4cc3-aef6-d05b5bf3e24a") format("svg");
+}
+@font-face {
+    font-family: "SackersGothicW01-Medium";
+    src:url("../rl-com/Fonts/27587338-8a56-4b02-9294-f3c6cb9a1aa3.eot?#iefix");
+    src:url("../rl-com/Fonts/27587338-8a56-4b02-9294-f3c6cb9a1aa3.eot?#iefix") format("eot"),url("../rl-com/Fonts/e166de1f-75a3-44b0-b88e-a037e19243d2.woff") format("woff"),url("../rl-com/Fonts/2d9efcdc-b053-4bc8-bef4-80630d67027e.ttf") format("truetype"),url("../rl-com/Fonts/a4ece7c2-be4a-4681-bb11-d02bfc53c66e.svg#a4ece7c2-be4a-4681-bb11-d02bfc53c66e") format("svg");
+}
+
+@font-face {
+    font-family: 'Northwell Alt';
+    src: url('../rl-fonts/Fonts/NorthwellAlt.woff2') format('woff2');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Northwell';
+    src: url('../rl-fonts/Fonts/Northwell.woff2') format('woff2');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Northwell Swash';
+    src: url('../rl-fonts/Fonts/NorthwellSwash.woff2') format('woff2');
+    font-display: swap;
+}
