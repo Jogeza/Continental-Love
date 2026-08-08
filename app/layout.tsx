@@ -3,6 +3,8 @@ import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import { CartProvider } from "components/cart/cart-context";
+import { getCart } from "lib/shopify";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,15 +27,26 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Shopify credentials aren't configured in every environment yet (see
+  // .env.example). Falling back to an empty cart keeps the app usable and
+  // the build green until real store credentials are added, without
+  // touching lib/shopify itself.
+  const cartPromise = process.env.SHOPIFY_STORE_DOMAIN
+    ? getCart()
+    : Promise.resolve(undefined);
+
   return (
     <html lang="en">
       <body
         className={`${inter.variable} ${playfair.variable}`}
       >
-        <Navbar />
-        {children}
-        <Footer />
+        <CartProvider cartPromise={cartPromise}>
+          <Navbar />
+          {children}
+          <Footer />
+        </CartProvider>
       </body>
     </html>
   );
 }
+

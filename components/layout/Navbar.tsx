@@ -1,4 +1,5 @@
 import Logo from "@/components/brand/Logo";
+import CartModal from "components/cart/modal";
 
 export default function Navbar() {
   return (
@@ -13,6 +14,8 @@ export default function Navbar() {
           <a href="#">Travel</a>
           <a href="#">Story</a>
         </div>
+
+        <CartModal />
       </nav>
     </header>
   );
