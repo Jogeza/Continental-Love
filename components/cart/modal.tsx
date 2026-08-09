@@ -22,17 +22,17 @@ type MerchandiseSearchParams = {
 };
 
 export default function CartModal() {
-  const { cart, updateCartItem } = useCart();
+  const { cart, shopifyEnabled, updateCartItem } = useCart();
   const [isOpen, setIsOpen] = useState(false);
   const quantityRef = useRef(cart?.totalQuantity);
   const openCart = () => setIsOpen(true);
   const closeCart = () => setIsOpen(false);
 
   useEffect(() => {
-    if (!cart) {
+    if (!cart && shopifyEnabled) {
       createCartAndSetCookie();
     }
-  }, [cart]);
+  }, [cart, shopifyEnabled]);
 
   useEffect(() => {
     if (

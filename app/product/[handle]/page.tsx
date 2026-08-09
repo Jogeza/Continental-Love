@@ -1,0 +1,172 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { getProduct, getProductRecommendations } from "@/lib/commerce";
+import { MediaImage } from "@/components/primitives/MediaImage";
+import { Price } from "@/components/primitives/Price";
+import { ProductCard } from "@/components/primitives/ProductCard";
+import { EditorialGrid } from "@/components/primitives/EditorialGrid";
+import { AddToCart } from "@/components/cart/add-to-cart";
+import type { Product as ShopifyProduct } from "@/lib/shopify/types";
+
+interface ProductPageProps {
+  params: Promise<{ handle: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
+  const { handle } = await params;
+  const product = await getProduct(handle);
+
+  if (!product) {
+    return {
+      title: "Product Not Found | Continental Love",
+    };
+  }
+
+  const { url, altText } = product.featuredImage || {};
+
+  return {
+    title: `${product.seo?.title || product.title} | Continental Love Atelier`,
+    description: product.seo?.description || product.description,
+    openGraph: {
+      title: product.title,
+      description: product.description,
+      images: url ? [{ url, alt: altText }] : [],
+    },
+  };
+}
+
+export default async function ProductPage({ params, searchParams }: ProductPageProps) {
+  const { handle } = await params;
+  const sParams = await searchParams;
+  const product = await getProduct(handle);
+
+  if (!product) {
+    notFound();
+  }
+
+  const relatedProducts = await getProductRecommendations(product.id);
+
+  // Find matching variant based on selected search parameters
+  const selectedVariant = product.variants.find((variant) =>
+    variant.selectedOptions.every(
+      (option) => sParams[option.name.toLowerCase()] === option.value
+    )
+  ) || product.variants[0];
+
+  return (
+    <div className="min-h-screen bg-[var(--warm-ivory)] py-12 md:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      {/* Product Detail Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+        {/* Gallery Section */}
+        <div className="lg:col-span-7 space-y-6">
+          <MediaImage
+            image={product.featuredImage}
+            aspectRatio="portrait"
+            priority
+            className="w-full rounded-sm border border-neutral-200/60 shadow-sm"
+          />
+          {product.images.length > 1 && (
+            <div className="grid grid-cols-4 gap-4">
+              {product.images.slice(0, 4).map((img, idx) => (
+                <MediaImage
+                  key={img.url || idx}
+                  image={img}
+                  aspectRatio="square"
+                  className="rounded-xs cursor-pointer border border-neutral-200/60 hover:border-[var(--heritage-gold)] transition-colors"
+                />
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Product Details & Purchase Form */}
+        <div className="lg:col-span-5 flex flex-col justify-start">
+          <span className="text-xs font-sans tracking-[0.25em] uppercase text-[var(--heritage-gold)] font-semibold mb-3">
+            UGANDA → ITALY ATELIER
+          </span>
+
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-[var(--charcoal)] leading-tight mb-4">
+            {product.title}
+          </h1>
+
+          <div className="mb-6 pb-6 border-b border-neutral-200">
+            <Price
+              price={selectedVariant?.price || product.priceRange.minVariantPrice}
+              priceClassName="text-xl md:text-2xl font-serif"
+            />
+          </div>
+
+          {/* Description */}
+          {product.descriptionHtml ? (
+            <div
+              className="prose prose-neutral text-sm text-neutral-700 font-sans leading-relaxed mb-8"
+              dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
+            />
+          ) : (
+            <p className="text-sm text-neutral-700 font-sans leading-relaxed mb-8">
+              {product.description}
+            </p>
+          )}
+
+          {/* Options / Variants */}
+          {product.options.map((option) => (
+            <div key={option.id} className="mb-6">
+              <label className="block text-xs font-sans font-semibold tracking-widest text-[var(--charcoal)] uppercase mb-3">
+                {option.name}:
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {option.values.map((value) => {
+                  const isActive = sParams[option.name.toLowerCase()] === value || option.values.length === 1;
+                  return (
+                    <span
+                      key={value}
+                      className={`px-4 py-2 text-xs font-sans tracking-wider border rounded-xs transition-colors cursor-pointer ${
+                        isActive
+                          ? "border-[var(--charcoal)] bg-[var(--charcoal)] text-[var(--warm-ivory)] font-medium"
+                          : "border-neutral-300 text-neutral-700 hover:border-[var(--charcoal)]"
+                      }`}
+                    >
+                      {value}
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+
+          {/* Add to Cart Form */}
+          <div className="mt-4 pt-6 border-t border-neutral-200">
+            <AddToCart product={product as unknown as ShopifyProduct} />
+          </div>
+
+          {/* Brand Guarantee & Craftsmanship Note */}
+          <div className="mt-8 pt-6 border-t border-neutral-200/80 space-y-3 text-xs font-sans text-neutral-600">
+            <div className="flex items-center gap-2">
+              <span className="text-[var(--heritage-gold)]">✦</span>
+              <span>Authentic Pan-African artisanal craftsmanship & Ugandan origin</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[var(--heritage-gold)]">✦</span>
+              <span>Complimentary luxury packaging & insured international dispatch</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Related Products Section */}
+      {relatedProducts.length > 0 && (
+        <div className="mt-24 pt-16 border-t border-neutral-200">
+          <h2 className="text-2xl md:text-3xl font-serif text-[var(--charcoal)] mb-8">
+            Complements & Atelier Curations
+          </h2>
+          <EditorialGrid columns={3}>
+            {relatedProducts.slice(0, 3).map((item) => (
+              <ProductCard key={item.id} product={item} />
+            ))}
+          </EditorialGrid>
+        </div>
+      )}
+    </div>
+  );
+}

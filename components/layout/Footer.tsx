@@ -3,15 +3,14 @@ import Logo from "@/components/brand/Logo";
 import { brand } from "@/lib/brand";
 
 const collections = [
-  { name: "Coffee", href: "/coffee" },
-  { name: "Apparel", href: "/apparel" },
-  { name: "Jewelry", href: "/jewelry" },
+  { name: "Coffee", href: "/search/coffee" },
+  { name: "Apparel", href: "/search/apparel" },
+  { name: "Jewelry", href: "/search/jewelry" },
   { name: "Discover Uganda", href: "/discover-uganda" },
 ];
 
 export default function Footer() {
-  const year = new Date().getFullYear();
-
+  const CURRENT_YEAR = 2026;
   return (
     <footer className="border-t border-black/10 bg-[#F8F5EF]">
       <div className="mx-auto max-w-7xl px-6 py-16 md:px-16">
@@ -44,7 +43,7 @@ export default function Footer() {
 
         <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-black/10 pt-8 text-xs text-[#1C1C1C]/50 md:flex-row">
           <p>
-            &copy; {year} {brand.name}. All rights reserved.
+           &copy; {CURRENT_YEAR} {brand.name}. All rights reserved.
           </p>
           <p className="tracking-[0.15em] uppercase">Kampala — Milano</p>
         </div>

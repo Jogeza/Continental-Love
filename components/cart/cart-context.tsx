@@ -28,6 +28,7 @@ type CartAction =
 
 type CartContextType = {
   cartPromise: Promise<Cart | undefined>;
+  shopifyEnabled: boolean;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -193,12 +194,14 @@ function cartReducer(state: Cart | undefined, action: CartAction): Cart {
 export function CartProvider({
   children,
   cartPromise,
+  shopifyEnabled,
 }: {
   children: React.ReactNode;
   cartPromise: Promise<Cart | undefined>;
+  shopifyEnabled: boolean;
 }) {
   return (
-    <CartContext.Provider value={{ cartPromise }}>
+    <CartContext.Provider value={{ cartPromise, shopifyEnabled }}>
       {children}
     </CartContext.Provider>
   );
@@ -211,6 +214,7 @@ export function useCart() {
   }
 
   const initialCart = use(context.cartPromise);
+  const { shopifyEnabled } = context;
   const [optimisticCart, updateOptimisticCart] = useOptimistic(
     initialCart,
     cartReducer,
@@ -230,9 +234,10 @@ export function useCart() {
   return useMemo(
     () => ({
       cart: optimisticCart,
+      shopifyEnabled,
       updateCartItem,
       addCartItem,
     }),
-    [optimisticCart],
+    [optimisticCart, shopifyEnabled],
   );
 }

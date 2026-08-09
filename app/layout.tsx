@@ -31,7 +31,8 @@ export default function RootLayout({
   // .env.example). Falling back to an empty cart keeps the app usable and
   // the build green until real store credentials are added, without
   // touching lib/shopify itself.
-  const cartPromise = process.env.SHOPIFY_STORE_DOMAIN
+  const shopifyEnabled = !!process.env.SHOPIFY_STORE_DOMAIN;
+  const cartPromise = shopifyEnabled
     ? getCart()
     : Promise.resolve(undefined);
 
@@ -40,7 +41,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${playfair.variable}`}
       >
-        <CartProvider cartPromise={cartPromise}>
+        <CartProvider cartPromise={cartPromise} shopifyEnabled={shopifyEnabled}>
           <Navbar />
           {children}
           <Footer />

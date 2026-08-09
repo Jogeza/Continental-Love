@@ -1,0 +1,50 @@
+{
+  "agency": "Continental Love Creative Agency",
+  "version": "1.0.0",
+  "brand_mission": "Elevate Continental Love as a premium, editorial, globally scalable African luxury commerce and cultural brand.",
+  "source_repository": "D:\\PROJECTS\\continental-love",
+  "governance": {
+    "preserve_existing_code": true,
+    "user_approval_required_for_changes": true,
+    "no_destructive_git_operations": true,
+    "provider_agnostic_commerce": true
+  },
+  "agents": [
+    {
+      "id": "creative_director",
+      "title": "Creative Director",
+      "file": "roles/creative_director.md",
+      "owns": ["Visual identity", "Typography system", "Art direction", "Photography & visual tone", "Brand consistency"]
+    },
+    {
+      "id": "ux_designer",
+      "title": "UX / Product Designer",
+      "file": "roles/ux_designer.md",
+      "owns": ["User journeys", "Navigation architecture", "Lookbook layouts", "Cart & checkout experience", "Responsive behavior"]
+    },
+    {
+      "id": "frontend_engineer",
+      "title": "Frontend Engineer",
+      "file": "roles/frontend_engineer.md",
+      "owns": ["Next.js App Router", "React 19/18 components", "TypeScript strictness", "Tailwind CSS", "Accessibility & performance"]
+    },
+    {
+      "id": "commerce_engineer",
+      "title": "Commerce Engineer",
+      "file": "roles/commerce_engineer.md",
+      "owns": ["Commerce data models", "Provider-agnostic abstraction", "Cart & checkout state", "Multi-currency engine", "Inventory/Catalog API"]
+    },
+    {
+      "id": "qa_engineer",
+      "title": "QA Engineer",
+      "file": "roles/qa_engineer.md",
+      "owns": ["TypeScript diagnostics", "Build verification", "Cross-device responsiveness", "Regression testing", "Production readiness"]
+    },
+    {
+      "id": "seo_growth",
+      "title": "SEO & Growth Specialist",
+      "file": "roles/seo_growth.md",
+      "owns": ["Technical SEO", "OpenGraph / Twitter Cards", "Schema.org structured data", "Core Web Vitals", "Conversion funnel optimization"]
+    }
+  ]
+}

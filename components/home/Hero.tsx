@@ -26,7 +26,7 @@ export default function Hero() {
 
           <div className="mt-10 flex flex-wrap items-center gap-6">
             <Link
-              href="/shop"
+              href="/search"
               className="inline-flex items-center border border-[var(--charcoal)] px-8 py-3 text-sm uppercase tracking-wide transition-colors duration-300 hover:bg-[var(--charcoal)] hover:text-[var(--warm-ivory)]"
             >
               Explore Collections
