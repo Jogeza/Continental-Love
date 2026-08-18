@@ -20,6 +20,19 @@ export const metadata: Metadata = {
   title: "Continental Love",
   description:
     "A luxury lifestyle house connecting Uganda and Italy.",
+  openGraph: {
+    title: "Continental Love",
+    description:
+      "A luxury lifestyle house connecting Uganda and Italy.",
+    siteName: "Continental Love",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Continental Love",
+    description:
+      "A luxury lifestyle house connecting Uganda and Italy.",
+  },
 };
 
 export default function RootLayout({

@@ -6,7 +6,8 @@ const collections = [
   { name: "Coffee", href: "/search/coffee" },
   { name: "Apparel", href: "/search/apparel" },
   { name: "Jewelry", href: "/search/jewelry" },
-  { name: "Discover Uganda", href: "/discover-uganda" },
+  { name: "Travel", href: "/discover-uganda" },
+  { name: "Story", href: "/story" },
 ];
 
 export default function Footer() {
@@ -23,7 +24,7 @@ export default function Footer() {
           </div>
 
           <nav aria-label="Collections">
-            <p className="text-xs uppercase tracking-[0.25em] text-[#1C1C1C]/50">
+            <p className="text-xs uppercase tracking-[0.25em] text-[#1C1C1C]/65">
               Collections
             </p>
             <ul className="mt-4 flex flex-col gap-3 text-sm">
@@ -41,7 +42,7 @@ export default function Footer() {
           </nav>
         </div>
 
-        <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-black/10 pt-8 text-xs text-[#1C1C1C]/50 md:flex-row">
+        <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-black/10 pt-8 text-xs text-[#1C1C1C]/65 md:flex-row">
           <p>
            &copy; {CURRENT_YEAR} {brand.name}. All rights reserved.
           </p>

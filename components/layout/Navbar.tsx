@@ -8,7 +8,7 @@ const navItems = [
   { label: "Coffee", href: "/search/coffee" },
   { label: "Jewelry", href: "/search/jewelry" },
   { label: "Travel", href: "/discover-uganda" },
-  { label: "Story", href: "/discover-uganda" },
+  { label: "Story", href: "/story" },
 ];
 
 export default function Navbar() {
@@ -25,7 +25,7 @@ export default function Navbar() {
             <Link
               key={item.label}
               href={item.href}
-              className="text-[#1C1C1C]/80 transition-colors hover:text-[#0F4C3A]"
+              className="text-[#1C1C1C]/80 transition-colors hover:text-[#0F4C3A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F4C3A] focus-visible:ring-offset-2"
             >
               {item.label}
             </Link>

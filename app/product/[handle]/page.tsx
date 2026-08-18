@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getProduct, getProductRecommendations } from "@/lib/commerce";
+import { getMockProductByHandle, getMockProductRecommendations } from "@/lib/mock-data";
 import { MediaImage } from "@/components/primitives/MediaImage";
 import { Price } from "@/components/primitives/Price";
 import { ProductCard } from "@/components/primitives/ProductCard";
 import { EditorialGrid } from "@/components/primitives/EditorialGrid";
+import { VariantSelector } from "@/components/primitives/VariantSelector";
 import { AddToCart } from "@/components/cart/add-to-cart";
 import type { Product as ShopifyProduct } from "@/lib/shopify/types";
+import type { Product } from "@/lib/commerce/types";
 
 interface ProductPageProps {
   params: Promise<{ handle: string }>;
@@ -15,6 +18,25 @@ interface ProductPageProps {
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { handle } = await params;
+
+  // Mock-data branch never calls into lib/commerce/lib/shopify at all —
+  // deliberately isolated from the live Shopify code path.
+  if (!process.env.SHOPIFY_STORE_DOMAIN) {
+    const product = getMockProductByHandle(handle);
+    if (!product) {
+      return { title: "Product Not Found | Continental Love" };
+    }
+    return {
+      title: `${product.seo.title} | Continental Love Atelier`,
+      description: product.seo.description,
+      openGraph: {
+        title: product.title,
+        description: product.description,
+        images: [{ url: product.featuredImage.url, alt: product.featuredImage.altText }],
+      },
+    };
+  }
+
   const product = await getProduct(handle);
 
   if (!product) {
@@ -39,13 +61,24 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 export default async function ProductPage({ params, searchParams }: ProductPageProps) {
   const { handle } = await params;
   const sParams = await searchParams;
-  const product = await getProduct(handle);
 
-  if (!product) {
-    notFound();
+  let product: Product | undefined;
+  let relatedProducts: Product[] = [];
+
+  if (!process.env.SHOPIFY_STORE_DOMAIN) {
+    // Mock-data branch — no call into lib/commerce/lib/shopify at all.
+    product = getMockProductByHandle(handle);
+    if (!product) {
+      notFound();
+    }
+    relatedProducts = getMockProductRecommendations(product.id);
+  } else {
+    product = await getProduct(handle);
+    if (!product) {
+      notFound();
+    }
+    relatedProducts = await getProductRecommendations(product.id);
   }
-
-  const relatedProducts = await getProductRecommendations(product.id);
 
   // Find matching variant based on selected search parameters
   const selectedVariant = product.variants.find((variant) =>
@@ -110,30 +143,7 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
           )}
 
           {/* Options / Variants */}
-          {product.options.map((option) => (
-            <div key={option.id} className="mb-6">
-              <label className="block text-xs font-sans font-semibold tracking-widest text-[var(--charcoal)] uppercase mb-3">
-                {option.name}:
-              </label>
-              <div className="flex flex-wrap gap-2">
-                {option.values.map((value) => {
-                  const isActive = sParams[option.name.toLowerCase()] === value || option.values.length === 1;
-                  return (
-                    <span
-                      key={value}
-                      className={`px-4 py-2 text-xs font-sans tracking-wider border rounded-xs transition-colors cursor-pointer ${
-                        isActive
-                          ? "border-[var(--charcoal)] bg-[var(--charcoal)] text-[var(--warm-ivory)] font-medium"
-                          : "border-neutral-300 text-neutral-700 hover:border-[var(--charcoal)]"
-                      }`}
-                    >
-                      {value}
-                    </span>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
+          <VariantSelector options={product.options} variants={product.variants} />
 
           {/* Add to Cart Form */}
           <div className="mt-4 pt-6 border-t border-neutral-200">

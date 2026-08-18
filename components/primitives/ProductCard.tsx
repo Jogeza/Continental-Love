@@ -21,6 +21,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 }) => {
   const isFullProduct = "priceRange" in product;
   const price = isFullProduct ? (product as Product).priceRange.minVariantPrice : null;
+  const isAvailable = isFullProduct ? (product as Product).availableForSale : true;
   const href = `/product/${product.handle}`;
   const image = product.featuredImage;
 
@@ -31,11 +32,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           image={image}
           aspectRatio={aspectRatio}
           zoomOnHover
-          className="rounded-sm"
+          className={clsx("rounded-sm", !isAvailable && "opacity-60")}
         />
         {originBadge && (
           <span className="absolute top-3 left-3 bg-[var(--charcoal)]/90 backdrop-blur-md text-[var(--warm-ivory)] text-[10px] font-sans font-semibold tracking-[0.2em] px-2.5 py-1 uppercase rounded-xs">
             {originBadge}
+          </span>
+        )}
+        {!isAvailable && (
+          <span className="absolute top-3 right-3 bg-[var(--warm-ivory)]/95 backdrop-blur-md text-[var(--charcoal)] text-[10px] font-sans font-semibold tracking-[0.2em] px-2.5 py-1 uppercase rounded-xs">
+            Sold Out
           </span>
         )}
       </Link>

@@ -11,7 +11,7 @@ const navItems: NavItem[] = [
   { label: "Coffee", href: "/search/coffee" },
   { label: "Jewelry", href: "/search/jewelry" },
   { label: "Travel", href: "/discover-uganda" },
-  { label: "Story", href: "/discover-uganda" },
+  { label: "Story", href: "/story" },
 ];
 
 export default function MobileNav() {

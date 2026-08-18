@@ -45,6 +45,12 @@
       "title": "SEO & Growth Specialist",
       "file": "roles/seo_growth.md",
       "owns": ["Technical SEO", "OpenGraph / Twitter Cards", "Schema.org structured data", "Core Web Vitals", "Conversion funnel optimization"]
+    },
+    {
+      "id": "ai_image_art_director",
+      "title": "AI Image Art Director",
+      "file": "roles/ai_image_art_director.md",
+      "owns": ["Creative brief to prompt translation", "Composition & lighting direction", "Cultural authenticity review", "Magnific generation quality control", "Generated asset rejection/approval staging"]
     }
   ]
 }

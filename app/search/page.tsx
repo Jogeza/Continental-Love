@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getProducts } from "@/lib/commerce";
+import { getMockProducts } from "@/lib/mock-data";
 import { SectionHeading } from "@/components/primitives/SectionHeading";
 import { EditorialGrid } from "@/components/primitives/EditorialGrid";
 import { ProductCard } from "@/components/primitives/ProductCard";
@@ -17,17 +18,21 @@ export default async function SearchPage({
   const sParams = await searchParams;
   const q = typeof sParams.q === "string" ? sParams.q : undefined;
 
-  // When Shopify is not configured, degrade gracefully instead of throwing.
+  const shopifyConfigured = !!process.env.SHOPIFY_STORE_DOMAIN;
+
+  // When Shopify is not configured, use local mock data so the page is
+  // fully browsable for design review rather than an empty state. See
+  // lib/mock-data.ts — swap this for the real call once credentials exist.
   let products: Awaited<ReturnType<typeof getProducts>> = [];
-  if (process.env.SHOPIFY_STORE_DOMAIN) {
+  if (shopifyConfigured) {
     try {
       products = await getProducts({ query: q });
     } catch {
       // Shopify not reachable — render empty state
     }
+  } else {
+    products = getMockProducts({ query: q });
   }
-
-  const shopifyConfigured = !!process.env.SHOPIFY_STORE_DOMAIN;
 
   return (
     <div>
@@ -37,12 +42,7 @@ export default async function SearchPage({
         subtitle="Crafted from Ugandan origin and European luxury standards. Discover handcrafted coffee, fine leather, silk apparel, and artisanal jewelry."
       />
 
-      {!shopifyConfigured ? (
-        <div className="py-20 text-center text-neutral-500 font-sans text-sm">
-          <p className="text-base font-medium text-[var(--charcoal)] mb-2">Shop coming soon.</p>
-          <p>Collections and products will appear here once the store is connected.</p>
-        </div>
-      ) : products.length === 0 ? (
+      {products.length === 0 ? (
         <div className="py-20 text-center text-neutral-600 font-sans text-sm">
           No creations found matching your query. Please explore our featured collections.
         </div>

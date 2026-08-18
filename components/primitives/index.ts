@@ -10,3 +10,4 @@ export * from "./Price";
 export * from "./ProductCard";
 export * from "./CollectionCard";
 export * from "./EditorialGrid";
+export * from "./VariantSelector";
