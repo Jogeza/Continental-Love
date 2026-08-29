@@ -1,63 +1,23 @@
-// components/home/Experience.tsx
+import { CreditCardIcon, HeartIcon, LifebuoyIcon, SparklesIcon } from "@heroicons/react/24/outline";
 
-import Image from "next/image";
+const benefits = [
+  { icon: SparklesIcon, title: "Sustainable", copy: "Better for people and planet." },
+  { icon: HeartIcon, title: "Made with love", copy: "Every detail. Every product." },
+  { icon: CreditCardIcon, title: "Secure payment", copy: "Safe, trusted & encrypted." },
+  { icon: LifebuoyIcon, title: "Customer care", copy: "We're here to help." },
+];
 
 export default function Experience() {
   return (
-    <section className="px-6 py-28 sm:px-12 lg:py-40">
-      <div className="mx-auto mb-16 max-w-[1600px] text-center">
-        <p className="mb-6 text-xs uppercase tracking-[0.3em] text-[var(--forest-green)]">
-          The Connection
-        </p>
-        <h2 className="mx-auto max-w-2xl text-3xl sm:text-4xl">
-          Two countries. One continental love.
-        </h2>
-      </div>
-
-      <div className="relative mx-auto grid max-w-[1600px] grid-cols-1 sm:grid-cols-2">
-        {/* Uganda */}
-        <div className="relative">
-          <div className="relative aspect-[4/5] sm:aspect-auto sm:h-[640px]">
-            <Image
-              src="/images/experience/uganda.jpg"
-              alt="Uganda"
-              fill
-              sizes="(min-width: 640px) 50vw, 100vw"
-              className="object-cover"
-            />
-          </div>
-          <div className="px-2 py-8 text-center sm:px-10">
-            <h3 className="text-xl sm:text-2xl">Uganda</h3>
-            <p className="mx-auto mt-3 max-w-xs text-sm leading-relaxed text-[var(--charcoal)]/70">
-              Origin. The soil, the farms, the hands that begin every piece
-              we carry.
-            </p>
-          </div>
+    <>
+      <section aria-label="Brand values" className="border-y border-black/10 bg-[#fbf8f2] px-4 py-7 sm:px-8">
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-8 gap-y-3 text-center text-[10px] font-semibold uppercase tracking-[.2em] text-black/65 sm:justify-between"><span>Crafted in Uganda</span><span className="text-[#b4862b]">◆</span><span>Designed for the world</span><span className="text-[#b4862b]">◆</span><span>Rooted in heritage</span><span className="text-[#b4862b]">◆</span><span>Built with purpose</span></div>
+      </section>
+      <section aria-label="Customer benefits" className="bg-[#f6f2ea] px-5 py-9 sm:px-8">
+        <div className="mx-auto grid max-w-[1340px] grid-cols-1 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+          {benefits.map(({ icon: Icon, title, copy }, index) => <div key={title} className={`flex items-center gap-4 lg:px-8 ${index ? "lg:border-l lg:border-black/15" : ""}`}><Icon className="h-9 w-9 shrink-0 stroke-[1.25]" aria-hidden="true" /><div><h2 className="font-sans text-[11px] font-semibold uppercase tracking-[.12em]">{title}</h2><p className="mt-1 text-xs text-black/65">{copy}</p></div></div>)}
         </div>
-
-        {/* Divider — hidden on mobile, visible from sm up */}
-        <div className="pointer-events-none absolute inset-y-0 left-1/2 hidden w-px -translate-x-1/2 bg-[var(--heritage-gold)]/40 sm:block" />
-
-        {/* Italy */}
-        <div className="relative">
-          <div className="relative aspect-[4/5] sm:aspect-auto sm:h-[640px]">
-            <Image
-              src="/images/experience/italy.jpg"
-              alt="Italy"
-              fill
-              sizes="(min-width: 640px) 50vw, 100vw"
-              className="object-cover"
-            />
-          </div>
-          <div className="px-2 py-8 text-center sm:px-10">
-            <h3 className="text-xl sm:text-2xl">Italy</h3>
-            <p className="mx-auto mt-3 max-w-xs text-sm leading-relaxed text-[var(--charcoal)]/70">
-              Destination. Where the story continues &mdash; on the table,
-              in the wardrobe, in daily life.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }

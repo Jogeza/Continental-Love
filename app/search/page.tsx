@@ -5,6 +5,9 @@ import { SectionHeading } from "@/components/primitives/SectionHeading";
 import { EditorialGrid } from "@/components/primitives/EditorialGrid";
 import { ProductCard } from "@/components/primitives/ProductCard";
 import { isShopifyConfigured } from "@/lib/commerce/config";
+import { getSortOption } from "@/lib/constants";
+import { sortLocalProducts } from "@/lib/sort-products";
+import SortSelect from "@/components/commerce/SortSelect";
 
 export const metadata: Metadata = {
   title: "All Collections & Creations | Continental Love Atelier",
@@ -18,6 +21,8 @@ export default async function SearchPage({
 }) {
   const sParams = await searchParams;
   const q = typeof sParams.q === "string" ? sParams.q : undefined;
+  const sortSlug = typeof sParams.sort === "string" ? sParams.sort : undefined;
+  const sort = getSortOption(sortSlug);
 
   const shopifyConfigured = isShopifyConfigured();
 
@@ -27,12 +32,15 @@ export default async function SearchPage({
   let products: Awaited<ReturnType<typeof getProducts>> = [];
   if (shopifyConfigured) {
     try {
-      products = await getProducts({ query: q });
+      products = await getProducts({
+        query: q,
+        ...(sort.slug && { sortKey: sort.sortKey, reverse: sort.reverse }),
+      });
     } catch {
       // Shopify not reachable — render empty state
     }
   } else {
-    products = getMockProducts({ query: q });
+    products = sortLocalProducts(getMockProducts({ query: q }), sort);
   }
 
   return (
@@ -43,9 +51,15 @@ export default async function SearchPage({
         subtitle="Crafted from Ugandan origin and European luxury standards. Discover handcrafted coffee, fine leather, silk apparel, and artisanal jewelry."
       />
 
+      <div className="mb-8 flex items-center justify-end border-y border-black/10 py-3">
+        <SortSelect />
+      </div>
+
       {products.length === 0 ? (
-        <div className="py-20 text-center text-neutral-600 font-sans text-sm">
-          No creations found matching your query. Please explore our featured collections.
+        <div className="py-20 text-center font-sans text-sm text-neutral-600">
+          {q
+            ? `No creations found for “${q}”. Try another search or explore the collections.`
+            : "No creations are currently available. Please return soon."}
         </div>
       ) : (
         <EditorialGrid columns={3}>

@@ -40,6 +40,14 @@ export const sorting: SortFilterItem[] = [
   },
 ];
 
+export const discoverySorting = sorting.filter(
+  (item) => item.slug !== "trending-desc",
+);
+
+export function getSortOption(slug?: string): SortFilterItem {
+  return discoverySorting.find((item) => item.slug === slug) ?? defaultSort;
+}
+
 export const TAGS = {
   collections: "collections",
   products: "products",

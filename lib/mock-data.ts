@@ -11,6 +11,7 @@
  * this file is not, and must never become, a second commerce backend.
  */
 import type { Collection, Product } from "@/lib/commerce/types";
+import { getCollectionPath } from "@/lib/navigation";
 
 const image = (url: string, altText: string, width = 1200, height = 1500) => ({
   url,
@@ -23,6 +24,17 @@ const money = (amount: string, currencyCode = "USD") => ({ amount, currencyCode 
 
 export const mockCollections: Collection[] = [
   {
+    handle: "charcoal",
+    title: "Charcoal",
+    description: "Ugandan charcoal selected for dependable quality, considered sourcing, and clean international presentation.",
+    seo: {
+      title: "Ugandan Charcoal | Continental Love",
+      description: "Explore Continental Love charcoal from Uganda, selected for dependable quality and responsible commerce.",
+    },
+    updatedAt: new Date().toISOString(),
+    path: getCollectionPath("charcoal"),
+  },
+  {
     handle: "coffee",
     title: "Coffee",
     description:
@@ -32,7 +44,7 @@ export const mockCollections: Collection[] = [
       description: "Ugandan highland coffee, roasted and presented for a European table.",
     },
     updatedAt: new Date().toISOString(),
-    path: "/search/coffee",
+    path: getCollectionPath("coffee"),
   },
   {
     handle: "jewelry",
@@ -44,7 +56,7 @@ export const mockCollections: Collection[] = [
       description: "Handcrafted jewelry rooted in Ugandan material and craftsmanship.",
     },
     updatedAt: new Date().toISOString(),
-    path: "/search/jewelry",
+    path: getCollectionPath("jewelry"),
   },
   {
     handle: "apparel",
@@ -55,7 +67,7 @@ export const mockCollections: Collection[] = [
       description: "Ugandan-made apparel in natural fiber and restrained silhouette.",
     },
     updatedAt: new Date().toISOString(),
-    path: "/search/apparel",
+    path: getCollectionPath("apparel"),
   },
 ];
 
@@ -85,10 +97,10 @@ export const mockProducts: Product[] = [
       { id: "var-5", title: "Medium / 500g", availableForSale: false, selectedOptions: [{ name: "Roast", value: "Medium" }, { name: "Size", value: "500g" }], price: money("32.00") },
       { id: "var-6", title: "Dark / 500g", availableForSale: true, selectedOptions: [{ name: "Roast", value: "Dark" }, { name: "Size", value: "500g" }], price: money("32.00") },
     ],
-    featuredImage: image("/images/collections/coffee.jpg", "Highland Reserve coffee, whole beans in a woven basket"),
+    featuredImage: image("/images/coffee/coffee-packshot-250g.png", "Highland Reserve coffee package with a cup"),
     images: [
-      image("/images/collections/coffee.jpg", "Highland Reserve coffee, whole beans"),
-      image("/images/hero/continental-love-hero.jpg", "Coffee cherries being sorted by hand"),
+      image("/images/coffee/coffee-packshot-250g.png", "Highland Reserve coffee package with a cup"),
+      image("/images/coffee/coffee-hero-origin.png", "Coffee grower tending cherries in the highlands"),
     ],
     seo: { title: "Highland Reserve Coffee | Continental Love", description: "Single-origin Ugandan Arabica, small-batch roasted." },
     tags: ["coffee", "origin"],
@@ -107,8 +119,8 @@ export const mockProducts: Product[] = [
       { id: "var-7", title: "250g", availableForSale: true, selectedOptions: [{ name: "Size", value: "250g" }], price: money("14.00") },
       { id: "var-8", title: "500g", availableForSale: true, selectedOptions: [{ name: "Size", value: "500g" }], price: money("24.00") },
     ],
-    featuredImage: image("/images/collections/coffee.jpg", "Rwenzori Morning Blend coffee beans"),
-    images: [image("/images/collections/coffee.jpg", "Rwenzori Morning Blend coffee beans")],
+    featuredImage: image("/images/coffee/coffee-packshot-500g.png", "Rwenzori Morning Blend coffee package"),
+    images: [image("/images/coffee/coffee-packshot-500g.png", "Rwenzori Morning Blend coffee package")],
     seo: { title: "Rwenzori Morning Blend | Continental Love", description: "An everyday highland blend from Uganda." },
     tags: ["coffee"],
     updatedAt: new Date().toISOString(),
@@ -127,8 +139,8 @@ export const mockProducts: Product[] = [
       { id: "var-10", title: "M", availableForSale: true, selectedOptions: [{ name: "Size", value: "M" }], price: money("86.00") },
       { id: "var-11", title: "L", availableForSale: false, selectedOptions: [{ name: "Size", value: "L" }], price: money("86.00") },
     ],
-    featuredImage: image("/images/collections/jewelry.jpg", "Kampala Brass Cuff"),
-    images: [image("/images/collections/jewelry.jpg", "Kampala Brass Cuff")],
+    featuredImage: image("/images/apparel/apparel-studio-portrait.jpg", "Portrait styled with warm gold jewelry"),
+    images: [image("/images/apparel/apparel-studio-portrait.jpg", "Portrait styled with warm gold jewelry")],
     seo: { title: "Kampala Brass Cuff | Continental Love", description: "Hand-forged brass cuff from Kampala artisans." },
     tags: ["jewelry"],
     updatedAt: new Date().toISOString(),
@@ -145,8 +157,8 @@ export const mockProducts: Product[] = [
     variants: [
       { id: "var-12", title: "Default", availableForSale: true, selectedOptions: [{ name: "Title", value: "Default" }], price: money("54.00") },
     ],
-    featuredImage: image("/images/collections/jewelry.jpg", "Origin Drop Earrings"),
-    images: [image("/images/collections/jewelry.jpg", "Origin Drop Earrings")],
+    featuredImage: image("/images/apparel/apparel-model-tshirt-white.jpg", "Model wearing warm drop earrings") ,
+    images: [image("/images/apparel/apparel-model-tshirt-white.jpg", "Model wearing warm drop earrings")],
     seo: { title: "Origin Drop Earrings | Continental Love", description: "Fine brass drop earrings, minimal form." },
     tags: ["jewelry"],
     updatedAt: new Date().toISOString(),
@@ -166,8 +178,8 @@ export const mockProducts: Product[] = [
       { id: "var-15", title: "L", availableForSale: true, selectedOptions: [{ name: "Size", value: "L" }], price: money("120.00") },
       { id: "var-16", title: "XL", availableForSale: false, selectedOptions: [{ name: "Size", value: "XL" }], price: money("120.00") },
     ],
-    featuredImage: image("/images/collections/apparel.jpg", "Highland Linen Shirt"),
-    images: [image("/images/collections/apparel.jpg", "Highland Linen Shirt")],
+    featuredImage: image("/images/apparel/apparel-model-tshirt-black.jpg", "Continental Love black shirt"),
+    images: [image("/images/apparel/apparel-model-tshirt-black.jpg", "Continental Love black shirt")],
     seo: { title: "Highland Linen Shirt | Continental Love", description: "Natural linen shirt for warm-weather wear." },
     tags: ["apparel"],
     updatedAt: new Date().toISOString(),
@@ -184,8 +196,8 @@ export const mockProducts: Product[] = [
     variants: [
       { id: "var-17", title: "Default", availableForSale: false, selectedOptions: [{ name: "Title", value: "Default" }], price: money("140.00") },
     ],
-    featuredImage: image("/images/collections/apparel.jpg", "Coastal Wrap Dress"),
-    images: [image("/images/collections/apparel.jpg", "Coastal Wrap Dress")],
+    featuredImage: image("/images/apparel/apparel-model-hoodie-olive.jpg", "Continental Love olive hoodie"),
+    images: [image("/images/apparel/apparel-model-hoodie-olive.jpg", "Continental Love olive hoodie")],
     seo: { title: "Coastal Wrap Dress | Continental Love", description: "Lightweight cotton wrap dress." },
     tags: ["apparel"],
     updatedAt: new Date().toISOString(),

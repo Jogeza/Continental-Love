@@ -5,6 +5,7 @@ import {
 } from "lib/constants";
 import { isShopifyError } from "lib/type-guards";
 import { ensureStartsWith } from "lib/utils";
+import { getCollectionPath } from "lib/navigation";
 import {
   cacheLife,
   cacheTag,
@@ -149,7 +150,7 @@ const reshapeCollection = (
 
   return {
     ...collection,
-    path: `/search/${collection.handle}`,
+    path: getCollectionPath(collection.handle),
   };
 };
 

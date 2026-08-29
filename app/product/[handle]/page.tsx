@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getProduct, getProductRecommendations } from "@/lib/commerce";
 import { getMockProductByHandle, getMockProductRecommendations } from "@/lib/mock-data";
-import { MediaImage } from "@/components/primitives/MediaImage";
 import { Price } from "@/components/primitives/Price";
 import { ProductCard } from "@/components/primitives/ProductCard";
 import { EditorialGrid } from "@/components/primitives/EditorialGrid";
@@ -11,6 +10,7 @@ import { AddToCart } from "@/components/cart/add-to-cart";
 import type { Product as ShopifyProduct } from "@/lib/shopify/types";
 import type { Product } from "@/lib/commerce/types";
 import { isShopifyConfigured } from "@/lib/commerce/config";
+import ProductGallery from "@/components/product/ProductGallery";
 
 interface ProductPageProps {
   params: Promise<{ handle: string }>;
@@ -95,25 +95,11 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
       {/* Product Detail Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
         {/* Gallery Section */}
-        <div className="lg:col-span-7 space-y-6">
-          <MediaImage
-            image={product.featuredImage}
-            aspectRatio="portrait"
-            priority
-            className="w-full rounded-sm border border-neutral-200/60 shadow-sm"
+        <div className="lg:col-span-7">
+          <ProductGallery
+            featuredImage={product.featuredImage}
+            images={product.images}
           />
-          {product.images.length > 1 && (
-            <div className="grid grid-cols-4 gap-4">
-              {product.images.slice(0, 4).map((img, idx) => (
-                <MediaImage
-                  key={img.url || idx}
-                  image={img}
-                  aspectRatio="square"
-                  className="rounded-xs cursor-pointer border border-neutral-200/60 hover:border-[var(--heritage-gold)] transition-colors"
-                />
-              ))}
-            </div>
-          )}
         </div>
 
         {/* Product Details & Purchase Form */}

@@ -2,8 +2,8 @@
 
 :root {
   --charcoal: #1C1C1C;
-  --warm-ivory: #F8F5EF;
-  --heritage-gold: #C8A45D;
+  --warm-ivory: #F6F2EA;
+  --heritage-gold: #B4862B;
   --coffee-brown: #6F4E37;
   --forest-green: #0F4C3A;
 
@@ -28,6 +28,14 @@ body {
   color: var(--foreground);
   font-family: var(--font-ui), Arial, sans-serif;
 }
+
+* { box-sizing: border-box; }
+
+::selection { background: #b4862b; color: white; }
+
+a, button { -webkit-tap-highlight-color: transparent; }
+
+:focus-visible { outline: 2px solid #b4862b; outline-offset: 3px; }
 
 h1,
 h2,
