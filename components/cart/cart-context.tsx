@@ -10,11 +10,15 @@ import React, {
   createContext,
   use,
   useContext,
-  useMemo,
   useOptimistic,
 } from "react";
 
-type UpdateType = "plus" | "minus" | "delete";
+export type UpdateType = "plus" | "minus" | "delete";
+
+export type OptimisticCartUpdate = (
+  merchandiseId: string,
+  updateType: UpdateType,
+) => void;
 
 type CartAction =
   | {
@@ -231,13 +235,10 @@ export function useCart() {
     updateOptimisticCart({ type: "ADD_ITEM", payload: { variant, product } });
   };
 
-  return useMemo(
-    () => ({
-      cart: optimisticCart,
-      shopifyEnabled,
-      updateCartItem,
-      addCartItem,
-    }),
-    [optimisticCart, shopifyEnabled],
-  );
+  return {
+    cart: optimisticCart,
+    shopifyEnabled,
+    updateCartItem,
+    addCartItem,
+  };
 }

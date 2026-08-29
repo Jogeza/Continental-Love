@@ -228,7 +228,10 @@ export async function createCart(): Promise<Cart> {
 export async function addToCart(
   lines: { merchandiseId: string; quantity: number }[]
 ): Promise<Cart> {
-  const cartId = (await cookies()).get("cartId")?.value!;
+  const cartId = (await cookies()).get("cartId")?.value;
+  if (!cartId) {
+    throw new Error("Cannot add an item without an active cart");
+  }
   const res = await shopifyFetch<ShopifyAddToCartOperation>({
     query: addToCartMutation,
     variables: {
@@ -240,7 +243,10 @@ export async function addToCart(
 }
 
 export async function removeFromCart(lineIds: string[]): Promise<Cart> {
-  const cartId = (await cookies()).get("cartId")?.value!;
+  const cartId = (await cookies()).get("cartId")?.value;
+  if (!cartId) {
+    throw new Error("Cannot remove an item without an active cart");
+  }
   const res = await shopifyFetch<ShopifyRemoveFromCartOperation>({
     query: removeFromCartMutation,
     variables: {
@@ -255,7 +261,10 @@ export async function removeFromCart(lineIds: string[]): Promise<Cart> {
 export async function updateCart(
   lines: { id: string; merchandiseId: string; quantity: number }[]
 ): Promise<Cart> {
-  const cartId = (await cookies()).get("cartId")?.value!;
+  const cartId = (await cookies()).get("cartId")?.value;
+  if (!cartId) {
+    throw new Error("Cannot update an item without an active cart");
+  }
   const res = await shopifyFetch<ShopifyUpdateCartOperation>({
     query: editCartItemsMutation,
     variables: {
@@ -504,8 +513,8 @@ export async function getProducts({
 
 // This is called from `app/api/revalidate.ts` so providers can control revalidation logic.
 export async function revalidate(req: NextRequest): Promise<NextResponse> {
-  // We always need to respond with a 200 status code to Shopify,
-  // otherwise it will continue to retry the request.
+  // Valid Shopify webhook requests receive a 200 response so Shopify does not
+  // retry them. Authentication failures are rejected before revalidation.
   const collectionWebhooks = [
     "collections/create",
     "collections/delete",
@@ -523,7 +532,7 @@ export async function revalidate(req: NextRequest): Promise<NextResponse> {
 
   if (!secret || secret !== process.env.SHOPIFY_REVALIDATION_SECRET) {
     console.error("Invalid revalidation secret.");
-    return NextResponse.json({ status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   if (!isCollectionUpdate && !isProductUpdate) {

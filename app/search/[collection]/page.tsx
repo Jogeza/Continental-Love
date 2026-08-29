@@ -5,6 +5,7 @@ import { getMockCollection, getMockCollectionProducts } from "@/lib/mock-data";
 import { SectionHeading } from "@/components/primitives/SectionHeading";
 import { EditorialGrid } from "@/components/primitives/EditorialGrid";
 import { ProductCard } from "@/components/primitives/ProductCard";
+import { isShopifyConfigured } from "@/lib/commerce/config";
 
 interface CollectionPageProps {
   params: Promise<{ collection: string }>;
@@ -14,7 +15,7 @@ interface CollectionPageProps {
 export async function generateMetadata({ params }: CollectionPageProps): Promise<Metadata> {
   const { collection: handle } = await params;
 
-  if (!process.env.SHOPIFY_STORE_DOMAIN) {
+  if (!isShopifyConfigured()) {
     const mock = getMockCollection(handle);
     return mock
       ? { title: `${mock.seo.title}`, description: mock.seo.description }
@@ -44,7 +45,7 @@ export default async function CollectionPage({ params, searchParams }: Collectio
   // so the collection is fully browsable for design review. Swap this
   // branch out once real credentials exist — the render below is identical
   // either way, since both paths produce the same Collection/Product types.
-  if (!process.env.SHOPIFY_STORE_DOMAIN) {
+  if (!isShopifyConfigured()) {
     const mockCollection = getMockCollection(handle);
     if (!mockCollection) {
       notFound();

@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { Dialog, Transition } from "@headlessui/react";
 import { ShoppingCartIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import LoadingDots from "components/loading-dots";
-import Price from "components/price";
+import { Price } from "@/components/primitives/Price";
 import { DEFAULT_OPTION } from "lib/constants";
 import { createUrl } from "lib/utils";
 import Image from "next/image";
@@ -40,10 +40,11 @@ export default function CartModal() {
       cart?.totalQuantity !== quantityRef.current &&
       cart?.totalQuantity > 0
     ) {
-      if (!isOpen) {
-        setIsOpen(true);
-      }
       quantityRef.current = cart?.totalQuantity;
+      if (!isOpen) {
+        const openTimer = window.setTimeout(() => setIsOpen(true), 0);
+        return () => window.clearTimeout(openTimer);
+      }
     }
   }, [isOpen, cart?.totalQuantity, quantityRef]);
 

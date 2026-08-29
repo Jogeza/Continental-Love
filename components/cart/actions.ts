@@ -12,8 +12,10 @@ import { updateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
+type CartActionState = string | null | undefined;
+
 export async function addItem(
-  prevState: any,
+  _prevState: CartActionState,
   selectedVariantId: string | undefined
 ) {
   if (!selectedVariantId) {
@@ -23,12 +25,15 @@ export async function addItem(
   try {
     await addToCart([{ merchandiseId: selectedVariantId, quantity: 1 }]);
     updateTag(TAGS.cart);
-  } catch (e) {
+  } catch {
     return "Error adding item to cart";
   }
 }
 
-export async function removeItem(prevState: any, merchandiseId: string) {
+export async function removeItem(
+  _prevState: CartActionState,
+  merchandiseId: string,
+) {
   try {
     const cart = await getCart();
 
@@ -46,13 +51,13 @@ export async function removeItem(prevState: any, merchandiseId: string) {
     } else {
       return "Item not found in cart";
     }
-  } catch (e) {
+  } catch {
     return "Error removing item from cart";
   }
 }
 
 export async function updateItemQuantity(
-  prevState: any,
+  _prevState: CartActionState,
   payload: {
     merchandiseId: string;
     quantity: number;
@@ -96,11 +101,11 @@ export async function updateItemQuantity(
 }
 
 export async function redirectToCheckout() {
-  let cart = await getCart();
+  const cart = await getCart();
   redirect(cart!.checkoutUrl);
 }
 
 export async function createCartAndSetCookie() {
-  let cart = await createCart();
+  const cart = await createCart();
   (await cookies()).set("cartId", cart.id!);
 }

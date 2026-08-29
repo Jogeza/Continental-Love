@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import Price from "./price";
+import { Price } from "./primitives/Price";
 
 const Label = ({
   title,
@@ -29,7 +29,8 @@ const Label = ({
           className="flex-none rounded-full bg-blue-600 p-2 text-white"
           amount={amount}
           currencyCode={currencyCode}
-          currencyCodeClassName="hidden @[275px]/label:inline"
+          priceClassName="text-white"
+          currencyClassName="hidden @[275px]/label:inline"
         />
       </div>
     </div>

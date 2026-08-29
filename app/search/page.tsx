@@ -4,6 +4,7 @@ import { getMockProducts } from "@/lib/mock-data";
 import { SectionHeading } from "@/components/primitives/SectionHeading";
 import { EditorialGrid } from "@/components/primitives/EditorialGrid";
 import { ProductCard } from "@/components/primitives/ProductCard";
+import { isShopifyConfigured } from "@/lib/commerce/config";
 
 export const metadata: Metadata = {
   title: "All Collections & Creations | Continental Love Atelier",
@@ -18,7 +19,7 @@ export default async function SearchPage({
   const sParams = await searchParams;
   const q = typeof sParams.q === "string" ? sParams.q : undefined;
 
-  const shopifyConfigured = !!process.env.SHOPIFY_STORE_DOMAIN;
+  const shopifyConfigured = isShopifyConfigured();
 
   // When Shopify is not configured, use local mock data so the page is
   // fully browsable for design review rather than an empty state. See

@@ -4,13 +4,14 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { removeItem } from "components/cart/actions";
 import type { CartItem } from "lib/shopify/types";
 import { useActionState } from "react";
+import type { OptimisticCartUpdate } from "./cart-context";
 
 export function DeleteItemButton({
   item,
   optimisticUpdate,
 }: {
   item: CartItem;
-  optimisticUpdate: any;
+  optimisticUpdate: OptimisticCartUpdate;
 }) {
   const [message, formAction] = useActionState(removeItem, null);
   const merchandiseId = item.merchandise.id;

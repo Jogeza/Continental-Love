@@ -5,6 +5,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { CartProvider } from "components/cart/cart-context";
 import { getCart } from "lib/shopify";
+import { isShopifyConfigured } from "@/lib/commerce/config";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -42,9 +43,8 @@ export default function RootLayout({
 }>) {
   // Shopify credentials aren't configured in every environment yet (see
   // .env.example). Falling back to an empty cart keeps the app usable and
-  // the build green until real store credentials are added, without
-  // touching lib/shopify itself.
-  const shopifyEnabled = !!process.env.SHOPIFY_STORE_DOMAIN;
+  // the build green until real store credentials are added.
+  const shopifyEnabled = isShopifyConfigured();
   const cartPromise = shopifyEnabled
     ? getCart()
     : Promise.resolve(undefined);

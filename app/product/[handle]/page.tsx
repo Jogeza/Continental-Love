@@ -10,6 +10,7 @@ import { VariantSelector } from "@/components/primitives/VariantSelector";
 import { AddToCart } from "@/components/cart/add-to-cart";
 import type { Product as ShopifyProduct } from "@/lib/shopify/types";
 import type { Product } from "@/lib/commerce/types";
+import { isShopifyConfigured } from "@/lib/commerce/config";
 
 interface ProductPageProps {
   params: Promise<{ handle: string }>;
@@ -21,7 +22,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 
   // Mock-data branch never calls into lib/commerce/lib/shopify at all —
   // deliberately isolated from the live Shopify code path.
-  if (!process.env.SHOPIFY_STORE_DOMAIN) {
+  if (!isShopifyConfigured()) {
     const product = getMockProductByHandle(handle);
     if (!product) {
       return { title: "Product Not Found | Continental Love" };
@@ -65,7 +66,9 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
   let product: Product | undefined;
   let relatedProducts: Product[] = [];
 
-  if (!process.env.SHOPIFY_STORE_DOMAIN) {
+  const shopifyConfigured = isShopifyConfigured();
+
+  if (!shopifyConfigured) {
     // Mock-data branch — no call into lib/commerce/lib/shopify at all.
     product = getMockProductByHandle(handle);
     if (!product) {
@@ -147,7 +150,10 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
 
           {/* Add to Cart Form */}
           <div className="mt-4 pt-6 border-t border-neutral-200">
-            <AddToCart product={product as unknown as ShopifyProduct} />
+            <AddToCart
+              product={product as unknown as ShopifyProduct}
+              commerceEnabled={shopifyConfigured}
+            />
           </div>
 
           {/* Brand Guarantee & Craftsmanship Note */}

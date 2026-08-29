@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { getCollections } from "@/lib/commerce";
+import { isShopifyConfigured } from "@/lib/commerce/config";
 
 export default async function SearchLayout({
   children,
@@ -10,7 +11,7 @@ export default async function SearchLayout({
   // When Shopify is not configured, getCollections() throws. Return an empty
   // list so the search UI renders gracefully without credentials.
   let collections: Awaited<ReturnType<typeof getCollections>> = [];
-  if (process.env.SHOPIFY_STORE_DOMAIN) {
+  if (isShopifyConfigured()) {
     try {
       collections = await getCollections();
     } catch {

@@ -11,10 +11,20 @@ import { useCart } from "./cart-context";
 function SubmitButton({
   availableForSale,
   selectedVariantId,
+  commerceEnabled,
 }: {
   availableForSale: boolean;
   selectedVariantId: string | undefined;
+  commerceEnabled: boolean;
 }) {
+  if (!commerceEnabled) {
+    return (
+      <Button variant="outline" disabled className="w-full">
+        Preview Only
+      </Button>
+    );
+  }
+
   if (!availableForSale) {
     return (
       <Button variant="outline" disabled className="w-full">
@@ -45,7 +55,13 @@ function SubmitButton({
   );
 }
 
-export function AddToCart({ product }: { product: Product }) {
+export function AddToCart({
+  product,
+  commerceEnabled,
+}: {
+  product: Product;
+  commerceEnabled: boolean;
+}) {
   const { variants, availableForSale } = product;
   const { addCartItem } = useCart();
   const searchParams = useSearchParams();
@@ -73,7 +89,13 @@ export function AddToCart({ product }: { product: Product }) {
       <SubmitButton
         availableForSale={availableForSale}
         selectedVariantId={selectedVariantId}
+        commerceEnabled={commerceEnabled}
       />
+      {!commerceEnabled && (
+        <p className="mt-3 text-center text-xs text-neutral-500">
+          Purchasing is unavailable in preview mode.
+        </p>
+      )}
       <p aria-live="polite" className="sr-only" role="status">
         {message}
       </p>
