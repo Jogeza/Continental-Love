@@ -1,6 +1,6 @@
 import type {Metadata} from "next";
 
-export const baseUrl = "https://continental-love.vercel.app";
+export const baseUrl = "https://continentallove.com";
 
 export function createPageMetadata({title, description, path, image, locale = "en"}: {title: string; description: string; path: string; image: string; locale?: string}): Metadata {
   const englishPath = path || "/";
