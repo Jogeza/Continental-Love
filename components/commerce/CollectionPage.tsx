@@ -11,6 +11,7 @@ import { EditorialGrid } from "@/components/primitives/EditorialGrid";
 import { ProductCard } from "@/components/primitives/ProductCard";
 import SortSelect from "@/components/commerce/SortSelect";
 import { Suspense } from "react";
+import {getTranslations} from "next-intl/server";
 
 export type CollectionSearchParams = Promise<{
   [key: string]: string | string[] | undefined;
@@ -74,6 +75,7 @@ export default async function CollectionPage({
   const sortSlug = typeof params.sort === "string" ? params.sort : undefined;
   const sort = getSortOption(sortSlug);
   const shopifyConfigured = isShopifyConfigured();
+  const t = await getTranslations("Product");
 
   let collection: Collection | undefined;
   let products: Product[] = [];
@@ -100,24 +102,25 @@ export default async function CollectionPage({
     <div>
       {showHeading && (
         <SectionHeading
-          kicker="UGANDA → ITALY ATELIER COLLECTION"
+          kicker={t("collectionKicker")}
           title={collection.title}
           subtitle={collection.description || "Curated luxury creations celebrating Ugandan origin and artisanal distinction."}
         />
       )}
 
-      <div className="mb-8 flex items-center justify-end border-y border-black/10 py-3">
+      <div className="mb-8 flex items-center justify-between border-y border-black/10 py-3">
+        <p className="text-[10px] font-semibold uppercase tracking-[.18em] text-black/48">{products.length} {products.length === 1 ? t("piece") : t("pieces")}</p>
         <SortSelect />
       </div>
 
       {products.length === 0 ? (
         <div className="py-20 text-center font-sans text-sm text-neutral-600">
-          No creations are currently available in this collection.
+          {shopifyConfigured ? t("emptyLive") : t("emptyPreview")}
         </div>
       ) : (
         <EditorialGrid columns={3}>
           {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product.id} product={product} commerceEnabled={shopifyConfigured} />
           ))}
         </EditorialGrid>
       )}

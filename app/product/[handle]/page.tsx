@@ -11,6 +11,10 @@ import type { Product as ShopifyProduct } from "@/lib/shopify/types";
 import type { Product } from "@/lib/commerce/types";
 import { isShopifyConfigured } from "@/lib/commerce/config";
 import ProductGallery from "@/components/product/ProductGallery";
+import Link from "next/link";
+import {getLocale, getTranslations} from "next-intl/server";
+import {createPageMetadata, baseUrl} from "@/lib/seo";
+import {localizeHref} from "@/lib/i18n";
 
 interface ProductPageProps {
   params: Promise<{ handle: string }>;
@@ -19,6 +23,7 @@ interface ProductPageProps {
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { handle } = await params;
+  const locale = await getLocale();
 
   // Mock-data branch never calls into lib/commerce/lib/shopify at all —
   // deliberately isolated from the live Shopify code path.
@@ -27,15 +32,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     if (!product) {
       return { title: "Product Not Found | Continental Love" };
     }
-    return {
-      title: `${product.seo.title} | Continental Love Atelier`,
-      description: product.seo.description,
-      openGraph: {
-        title: product.title,
-        description: product.description,
-        images: [{ url: product.featuredImage.url, alt: product.featuredImage.altText }],
-      },
-    };
+    return createPageMetadata({title: `${product.seo.title} | Continental Love Atelier`, description: product.seo.description, path: `/product/${handle}`, image: product.featuredImage.url, locale});
   }
 
   const product = await getProduct(handle);
@@ -48,15 +45,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 
   const { url, altText } = product.featuredImage || {};
 
-  return {
-    title: `${product.seo?.title || product.title} | Continental Love Atelier`,
-    description: product.seo?.description || product.description,
-    openGraph: {
-      title: product.title,
-      description: product.description,
-      images: url ? [{ url, alt: altText }] : [],
-    },
-  };
+  return createPageMetadata({title: `${product.seo?.title || product.title} | Continental Love Atelier`, description: product.seo?.description || product.description, path: `/product/${handle}`, image: url || "/images/apparel/apparel-flatlay-outfit.jpg", locale});
 }
 
 export default async function ProductPage({ params, searchParams }: ProductPageProps) {
@@ -67,6 +56,8 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
   let relatedProducts: Product[] = [];
 
   const shopifyConfigured = isShopifyConfigured();
+  const locale = await getLocale();
+  const t = await getTranslations("Product");
 
   if (!shopifyConfigured) {
     // Mock-data branch — no call into lib/commerce/lib/shopify at all.
@@ -90,8 +81,31 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
     )
   ) || product.variants[0];
 
+  const productUrl = `${baseUrl}${localizeHref(`/product/${product.handle}`, locale)}`;
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.title,
+    description: product.description,
+    image: product.images.length ? product.images.map((image) => image.url) : [product.featuredImage.url],
+    sku: product.id,
+    brand: {"@type": "Brand", name: "Continental Love"},
+    ...(shopifyConfigured ? {
+      offers: {
+        "@type": "Offer",
+        url: productUrl,
+        priceCurrency: selectedVariant.price.currencyCode,
+        price: selectedVariant.price.amount,
+        availability: product.availableForSale ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      },
+    } : {}),
+  };
+
   return (
-    <div className="min-h-screen bg-[var(--warm-ivory)] py-12 md:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <main className="min-h-screen bg-[var(--warm-ivory)] px-4 py-8 sm:px-6 md:py-14 lg:px-8">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify(productJsonLd).replace(/</g, "\\u003c")}} />
+      <div className="mx-auto max-w-7xl">
+      <nav aria-label={t("breadcrumb")} className="mb-8 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.16em] text-black/45"><Link href={localizeHref("/", locale)} className="transition-colors hover:text-[var(--forest-green)]">{t("home")}</Link><span aria-hidden="true">/</span><Link href={localizeHref("/search", locale)} className="transition-colors hover:text-[var(--forest-green)]">{t("collections")}</Link><span aria-hidden="true">/</span><span className="text-black/72">{product.title}</span></nav>
       {/* Product Detail Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
         {/* Gallery Section */}
@@ -103,7 +117,7 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
         </div>
 
         {/* Product Details & Purchase Form */}
-        <div className="lg:col-span-5 flex flex-col justify-start">
+        <div className="flex flex-col justify-start lg:sticky lg:top-36 lg:col-span-5">
           <span className="text-xs font-sans tracking-[0.25em] uppercase text-[var(--heritage-gold)] font-semibold mb-3">
             UGANDA → ITALY ATELIER
           </span>
@@ -112,11 +126,11 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
             {product.title}
           </h1>
 
-          <div className="mb-6 pb-6 border-b border-neutral-200">
-            <Price
+          <div className="mb-6 border-b border-neutral-200 pb-6">
+            {shopifyConfigured ? <Price
               price={selectedVariant?.price || product.priceRange.minVariantPrice}
               priceClassName="text-xl md:text-2xl font-serif"
-            />
+            /> : <p className="text-sm font-medium text-neutral-600">{t("previewPrice")}</p>}
           </div>
 
           {/* Description */}
@@ -143,15 +157,16 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
           </div>
 
           {/* Brand Guarantee & Craftsmanship Note */}
-          <div className="mt-8 pt-6 border-t border-neutral-200/80 space-y-3 text-xs font-sans text-neutral-600">
+          <div className="mt-8 space-y-3 border-t border-neutral-200/80 pt-6 text-xs font-sans text-neutral-600">
             <div className="flex items-center gap-2">
               <span className="text-[var(--heritage-gold)]">✦</span>
-              <span>Authentic Pan-African artisanal craftsmanship & Ugandan origin</span>
+              <span>{t("originNote")}</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-[var(--heritage-gold)]">✦</span>
-              <span>Complimentary luxury packaging & insured international dispatch</span>
+              <span>{shopifyConfigured ? t("shippingLive") : t("shippingPreview")}</span>
             </div>
+            <div className="flex items-center gap-2"><span className="text-[var(--heritage-gold)]">✦</span><span>{t("clearInfo")}</span></div>
           </div>
         </div>
       </div>
@@ -160,15 +175,16 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
       {relatedProducts.length > 0 && (
         <div className="mt-24 pt-16 border-t border-neutral-200">
           <h2 className="text-2xl md:text-3xl font-serif text-[var(--charcoal)] mb-8">
-            Complements & Atelier Curations
+            {t("related")}
           </h2>
           <EditorialGrid columns={3}>
             {relatedProducts.slice(0, 3).map((item) => (
-              <ProductCard key={item.id} product={item} />
+              <ProductCard key={item.id} product={item} commerceEnabled={shopifyConfigured} />
             ))}
           </EditorialGrid>
         </div>
       )}
-    </div>
+      </div>
+    </main>
   );
 }

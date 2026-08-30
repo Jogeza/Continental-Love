@@ -1,35 +1,35 @@
 import type { Metadata } from "next";
 import CollectionLanding, { type CollectionLandingConfig } from "@/components/commerce/CollectionLanding";
 import type { CollectionSearchParams } from "@/components/commerce/CollectionPage";
+import {getLocale} from "next-intl/server";
+import {localizeCollectionConfig} from "@/lib/collection-locales";
+import {createPageMetadata} from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Meaningful Jewelry | Continental Love",
-  description: "Explore Continental Love jewelry inspired by place, identity, warm detail, and meaningful connection.",
-};
+export async function generateMetadata(): Promise<Metadata> { const locale = await getLocale(); return createPageMetadata({title:"Jewelry | Continental Love",description:"Explore Continental Love cuff, drop-earring, and necklace forms shown in the jewelry catalog preview.",path:"/jewelry",image:"/images/jewelry/jewelry-hero-lifestyle.jpg",locale}); }
 
 const jewelryConfig: CollectionLandingConfig = {
   handle: "jewelry",
-  eyebrow: "Identity · Detail · Connection",
-  title: "Meaning, made wearable.",
-  heroCopy: "Jewelry inspired by place, identity and the quiet power of meaningful connection.",
-  heroImage: "/images/apparel/apparel-studio-portrait.jpg",
+  eyebrow: "Brass forms · Cuffs · Drop earrings",
+  title: "Sculptural forms, worn close.",
+  heroCopy: "Hammered gold-tone cuffs, drop earrings, rings, and pendant forms presented in studio and lifestyle portraits.",
+  heroImage: "/images/jewelry/jewelry-hero-lifestyle.jpg",
   heroAlt: "Portrait highlighting warm gold jewelry and Continental Love styling",
-  heroPosition: "center 22%",
+  heroPosition: "center 35%",
   introEyebrow: "Carry the story",
-  introTitle: "Personal pieces with a sense of place.",
-  introCopy: "The jewelry collection brings warmth and meaning into a refined, everyday form. Its visual language is grounded in identity and connection, designed to complement rather than overwhelm.",
+  introTitle: "A small collection of strong, simple forms.",
+  introCopy: "The current catalog includes a sculptural cuff and drop earrings, supported by imagery of coordinating rings, pendants, and necklaces. Dimensions, metal composition, plating, and maker details require confirmation.",
   storyEyebrow: "Heritage in the details",
   storyTitle: "Small details can hold deep meaning.",
-  storyCopy: "Continental Love approaches jewelry as part of a wider story—one where form, symbolism and personal wear create a lasting connection to culture and place.",
-  storyImage: "/images/apparel/apparel-model-tshirt-white.jpg",
-  storyAlt: "Continental Love styling with warm jewelry details",
-  storyPosition: "center 25%",
+  storyCopy: "Hammered surfaces, oversized curves, and warm metal tones define the visible collection. The product pages avoid claiming a specific artisan process until supplier documentation is available.",
+  storyImage: "/images/jewelry/jewelry-studio-portrait.jpg",
+  storyAlt: "Portrait styled with Continental Love jewelry",
+  storyPosition: "center 30%",
   storyHref: "/discover-uganda",
   storyLinkLabel: "Discover Uganda",
   values: [
-    { title: "Meaning", copy: "Design expressed through identity, symbolism and connection." },
-    { title: "Craft", copy: "Attention to form, proportion and the details people notice up close." },
-    { title: "Timelessness", copy: "Pieces presented to feel personal and lasting rather than seasonal." },
+    { title: "Forms", copy: "Cuffs, drops, rings, and pendant silhouettes with broad curves and hammered surfaces." },
+    { title: "Catalog preview", copy: "A cuff and drop earrings shown as design fixtures without live price or availability." },
+    { title: "Specifications", copy: "Alloy, plating, dimensions, weight, maker, and care guidance will be published after verification." },
   ],
   relatedTitle: "Explore the wider collection.",
   relatedLinks: [
@@ -38,6 +38,7 @@ const jewelryConfig: CollectionLandingConfig = {
   ],
 };
 
-export default function JewelryPage({ searchParams }: { searchParams: CollectionSearchParams }) {
-  return <CollectionLanding config={jewelryConfig} searchParams={searchParams} />;
+export default async function JewelryPage({ searchParams }: { searchParams: CollectionSearchParams }) {
+  const locale = await getLocale();
+  return <CollectionLanding config={localizeCollectionConfig(jewelryConfig, locale)} searchParams={searchParams} />;
 }

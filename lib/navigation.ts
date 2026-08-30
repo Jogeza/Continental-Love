@@ -1,5 +1,6 @@
 export type NavigationItem = {
   label: string;
+  translationKey: "home" | "coffee" | "apparel" | "jewelry" | "discover" | "story";
   href: string;
   legacyHref?: string;
 };
@@ -12,12 +13,12 @@ export const collectionRoutes = {
 } as const;
 
 export const primaryNavigation: NavigationItem[] = [
-  { label: "Home", href: "/" },
-  { label: "Coffee", href: collectionRoutes.coffee, legacyHref: "/search/coffee" },
-  { label: "Apparel", href: collectionRoutes.apparel, legacyHref: "/search/apparel" },
-  { label: "Jewelry", href: collectionRoutes.jewelry, legacyHref: "/search/jewelry" },
-  { label: "Discover Uganda", href: "/discover-uganda" },
-  { label: "Story", href: "/story" },
+  { label: "Home", translationKey: "home", href: "/" },
+  { label: "Coffee", translationKey: "coffee", href: collectionRoutes.coffee, legacyHref: "/search/coffee" },
+  { label: "Apparel", translationKey: "apparel", href: collectionRoutes.apparel, legacyHref: "/search/apparel" },
+  { label: "Jewelry", translationKey: "jewelry", href: collectionRoutes.jewelry, legacyHref: "/search/jewelry" },
+  { label: "Discover Uganda", translationKey: "discover", href: "/discover-uganda" },
+  { label: "Story", translationKey: "story", href: "/story" },
 ];
 
 export function getCollectionPath(handle: string): string {
@@ -28,10 +29,11 @@ export function isNavigationItemActive(
   pathname: string,
   item: NavigationItem,
 ): boolean {
+  const normalizedPathname = pathname.replace(/^\/it(?=\/|$)/, "") || "/";
   return (
-    pathname === item.href ||
+    normalizedPathname === item.href ||
     (item.href !== "/" &&
-    pathname.startsWith(`${item.href}/`) ||
-    pathname === item.legacyHref)
+    normalizedPathname.startsWith(`${item.href}/`) ||
+    normalizedPathname === item.legacyHref)
   );
 }

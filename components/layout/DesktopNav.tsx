@@ -3,9 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { isNavigationItemActive, primaryNavigation } from "@/lib/navigation";
+import {useLocale, useTranslations} from "next-intl";
+import {localizeHref} from "@/lib/i18n";
 
 export default function DesktopNav() {
   const pathname = usePathname();
+  const locale = useLocale();
+  const t = useTranslations("Nav");
 
   return (
     <div className="hidden items-center gap-4 text-xs tracking-wide md:flex lg:gap-7 lg:text-sm">
@@ -15,7 +19,7 @@ export default function DesktopNav() {
         return (
           <Link
             key={item.label}
-            href={item.href}
+            href={localizeHref(item.href, locale)}
             aria-current={active ? "page" : undefined}
             className={`border-b py-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F4C3A] focus-visible:ring-offset-2 ${
               active
@@ -23,7 +27,7 @@ export default function DesktopNav() {
                 : "border-transparent text-[#1C1C1C]/80 hover:text-[#0F4C3A]"
             }`}
           >
-            {item.label}
+            {t(item.translationKey)}
           </Link>
         );
       })}

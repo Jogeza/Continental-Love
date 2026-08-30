@@ -15,7 +15,7 @@ export interface PriceProps extends React.HTMLAttributes<HTMLParagraphElement> {
 export const Price: React.FC<PriceProps> = ({
   price,
   amount,
-  currencyCode = "USD",
+  currencyCode = "EUR",
   compareAtPrice,
   className,
   priceClassName,

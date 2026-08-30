@@ -1,17 +1,17 @@
-import { CreditCardIcon, HeartIcon, LifebuoyIcon, SparklesIcon } from "@heroicons/react/24/outline";
+import { ArchiveBoxIcon, ClipboardDocumentCheckIcon, LifebuoyIcon, TagIcon } from "@heroicons/react/24/outline";
 
 const benefits = [
-  { icon: SparklesIcon, title: "Sustainable", copy: "Better for people and planet." },
-  { icon: HeartIcon, title: "Made with love", copy: "Every detail. Every product." },
-  { icon: CreditCardIcon, title: "Secure payment", copy: "Safe, trusted & encrypted." },
-  { icon: LifebuoyIcon, title: "Customer care", copy: "We're here to help." },
+  { icon: ClipboardDocumentCheckIcon, title: "Clear product pages", copy: "Images, variants, prices, and availability are shown together." },
+  { icon: TagIcon, title: "Visible stock status", copy: "Unavailable variants and sold-out products are marked before checkout." },
+  { icon: ArchiveBoxIcon, title: "Packaging information", copy: "Product imagery shows current retail and presentation formats." },
+  { icon: LifebuoyIcon, title: "Customer contact", copy: "Verified support details will be published before live commerce opens." },
 ];
 
 export default function Experience() {
   return (
     <>
       <section aria-label="Brand values" className="border-y border-black/10 bg-[#fbf8f2] px-4 py-7 sm:px-8">
-        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-8 gap-y-3 text-center text-[10px] font-semibold uppercase tracking-[.2em] text-black/65 sm:justify-between"><span>Crafted in Uganda</span><span className="text-[#b4862b]">◆</span><span>Designed for the world</span><span className="text-[#b4862b]">◆</span><span>Rooted in heritage</span><span className="text-[#b4862b]">◆</span><span>Built with purpose</span></div>
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-8 gap-y-3 text-center text-[10px] font-semibold uppercase tracking-[.2em] text-black/65 sm:justify-between"><span>Ugandan identity</span><span className="text-[#b4862b]">◆</span><span>European market focus</span><span className="text-[#b4862b]">◆</span><span>Four product categories</span><span className="text-[#b4862b]">◆</span><span>Catalog preview</span></div>
       </section>
       <section aria-label="Customer benefits" className="bg-[#f6f2ea] px-5 py-9 sm:px-8">
         <div className="mx-auto grid max-w-[1340px] grid-cols-1 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">

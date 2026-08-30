@@ -8,11 +8,13 @@ import { isShopifyConfigured } from "@/lib/commerce/config";
 import { getSortOption } from "@/lib/constants";
 import { sortLocalProducts } from "@/lib/sort-products";
 import SortSelect from "@/components/commerce/SortSelect";
+import {createPageMetadata} from "@/lib/seo";
+import {getLocale, getTranslations} from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "All Collections & Creations | Continental Love Atelier",
-  description: "Explore the complete Continental Love luxury collection bridging Ugandan origin and Italian luxury.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  return createPageMetadata({title: "All Collections & Creations | Continental Love Atelier", description: "Explore the Continental Love catalog preview.", path: "/search", image: "/images/apparel/apparel-flatlay-outfit.jpg", locale});
+}
 
 export default async function SearchPage({
   searchParams,
@@ -25,6 +27,7 @@ export default async function SearchPage({
   const sort = getSortOption(sortSlug);
 
   const shopifyConfigured = isShopifyConfigured();
+  const t = await getTranslations("Search");
 
   // When Shopify is not configured, use local mock data so the page is
   // fully browsable for design review rather than an empty state. See
@@ -46,25 +49,26 @@ export default async function SearchPage({
   return (
     <div>
       <SectionHeading
-        kicker="UGANDA → ITALY ATELIER"
-        title={q ? `Search Results for "${q}"` : "All Atelier Creations"}
-        subtitle="Crafted from Ugandan origin and European luxury standards. Discover handcrafted coffee, fine leather, silk apparel, and artisanal jewelry."
+        kicker={t("kicker")}
+        title={q ? t("results", {query: q}) : t("all")}
+        subtitle={t("subtitle")}
       />
 
-      <div className="mb-8 flex items-center justify-end border-y border-black/10 py-3">
+      <div className="mb-8 flex items-center justify-between border-y border-black/10 py-3">
+        <p className="text-[10px] font-semibold uppercase tracking-[.18em] text-black/48">{products.length} {products.length === 1 ? t("piece") : t("pieces")}</p>
         <SortSelect />
       </div>
 
       {products.length === 0 ? (
         <div className="py-20 text-center font-sans text-sm text-neutral-600">
           {q
-            ? `No creations found for “${q}”. Try another search or explore the collections.`
-            : "No creations are currently available. Please return soon."}
+            ? t("noResults", {query: q})
+            : shopifyConfigured ? t("emptyLive") : t("emptyPreview")}
         </div>
       ) : (
         <EditorialGrid columns={3}>
           {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product.id} product={product} commerceEnabled={shopifyConfigured} />
           ))}
         </EditorialGrid>
       )}

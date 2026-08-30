@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import CollectionLanding, { type CollectionLandingConfig } from "@/components/commerce/CollectionLanding";
 import type { CollectionSearchParams } from "@/components/commerce/CollectionPage";
+import {getLocale} from "next-intl/server";
+import {localizeCollectionConfig} from "@/lib/collection-locales";
+import {createPageMetadata} from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Ugandan Coffee | Continental Love",
-  description: "Explore Continental Love coffee rooted in Ugandan origin, careful presentation, and a connection from source to cup.",
-};
+export async function generateMetadata(): Promise<Metadata> { const locale = await getLocale(); return createPageMetadata({title:"Coffee | Continental Love",description:"Explore the Continental Love coffee catalog preview; origin and product specifications await verification.",path:"/coffee",image:"/images/coffee/coffee-hero-origin.png",locale}); }
 
 const coffeeConfig: CollectionLandingConfig = {
   handle: "coffee",
@@ -15,10 +15,10 @@ const coffeeConfig: CollectionLandingConfig = {
   heroImage: "/images/coffee/coffee-hero-origin.png",
   heroAlt: "Coffee grower tending ripe coffee cherries in the Ugandan highlands",
   heroPosition: "center",
-  introEyebrow: "A journey from source",
+  introEyebrow: "Rooted in Uganda",
   introTitle: "Origin is where flavor begins.",
   introCopy: "Our coffee collection puts Uganda first: its landscapes, its growing culture, and the patient work behind every cup. We present that origin clearly, without separating the product from the place that shaped it.",
-  storyEyebrow: "From the farm to the cup",
+  storyEyebrow: "An everyday ritual",
   storyTitle: "A story carried in every pour.",
   storyCopy: "Coffee connects land, time and everyday ritual. Continental Love brings those connections together through Ugandan origin, considered presentation, and a product made to be shared internationally.",
   storyImage: "/images/coffee/coffee-pouring.png",
@@ -38,6 +38,7 @@ const coffeeConfig: CollectionLandingConfig = {
   ],
 };
 
-export default function CoffeePage({ searchParams }: { searchParams: CollectionSearchParams }) {
-  return <CollectionLanding config={coffeeConfig} searchParams={searchParams} />;
+export default async function CoffeePage({ searchParams }: { searchParams: CollectionSearchParams }) {
+  const locale = await getLocale();
+  return <CollectionLanding config={localizeCollectionConfig(coffeeConfig, locale)} searchParams={searchParams} />;
 }

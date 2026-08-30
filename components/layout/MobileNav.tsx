@@ -9,13 +9,18 @@ import {
 } from "@heroicons/react/24/outline";
 import { usePathname, useRouter } from "next/navigation";
 import { isNavigationItemActive, primaryNavigation } from "@/lib/navigation";
+import {useLocale, useTranslations} from "next-intl";
+import {localizeHref} from "@/lib/i18n";
 
 export default function MobileNav() {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
   const pathname = usePathname();
   const router = useRouter();
+  const locale = useLocale();
+  const t = useTranslations("Nav");
 
   const closeMenu = (restoreFocus = false) => {
     setIsOpen(false);
@@ -28,7 +33,8 @@ export default function MobileNav() {
     event.preventDefault();
     const value = query.trim();
     setIsOpen(false);
-    router.push(value ? `/search?q=${encodeURIComponent(value)}` : "/search");
+    const target = value ? `/search?q=${encodeURIComponent(value)}` : "/search";
+    router.push(localizeHref(target, locale));
   };
 
   // Lock body scroll when menu is open
@@ -49,15 +55,19 @@ export default function MobileNav() {
     };
   }, [isOpen]);
 
+  useEffect(() => {
+    if (isOpen) closeButtonRef.current?.focus();
+  }, [isOpen]);
+
   return (
     <div className="md:hidden">
       {/* Hamburger button */}
       <button
         ref={menuButtonRef}
-        aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
+        aria-label={isOpen ? t("closeMenu") : t("menu")}
         aria-expanded={isOpen}
         aria-controls="mobile-nav-menu"
-        onClick={() => setIsOpen((prev) => !prev)}
+        onClick={() => isOpen ? closeMenu(true) : setIsOpen(true)}
         className="flex h-10 w-10 items-center justify-center rounded-full border border-[#1C1C1C]/15 text-[#1C1C1C] transition-colors hover:border-[#0F4C3A]"
       >
         {isOpen ? (
@@ -76,16 +86,15 @@ export default function MobileNav() {
         />
       )}
 
-      {/* Slide-in drawer */}
-      <nav
+      {/* Slide-in drawer is removed from the accessibility tree while closed. */}
+      {isOpen ? <nav
         id="mobile-nav-menu"
-        aria-label="Mobile navigation"
-        className={`fixed inset-y-0 right-0 z-50 flex w-72 flex-col bg-[#F8F5EF] px-8 py-10 shadow-xl transition-transform duration-300 ease-in-out ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        aria-label={t("mobileNavigation")}
+        className="fixed inset-y-0 right-0 z-50 flex w-72 flex-col bg-white px-8 py-10 shadow-xl"
       >
         <button
-          aria-label="Close navigation menu"
+          ref={closeButtonRef}
+          aria-label={t("closeMenu")}
           onClick={() => closeMenu(true)}
           className="mb-10 ml-auto flex h-10 w-10 items-center justify-center rounded-full border border-[#1C1C1C]/15 text-[#1C1C1C] transition-colors hover:border-[#0F4C3A]"
         >
@@ -94,7 +103,7 @@ export default function MobileNav() {
 
         <form onSubmit={submitSearch} className="mb-10 border-b border-[#1C1C1C]/30">
           <label htmlFor="mobile-site-search" className="sr-only">
-            Search products
+            {t("searchProducts")}
           </label>
           <div className="flex items-center">
             <MagnifyingGlassIcon className="h-4 w-4 shrink-0 text-[#1C1C1C]/60" />
@@ -103,14 +112,14 @@ export default function MobileNav() {
               type="search"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search the atelier"
+              placeholder={t("searchPlaceholder")}
               className="min-w-0 flex-1 bg-transparent px-3 py-3 text-sm outline-none placeholder:text-[#1C1C1C]/40"
             />
             <button
               type="submit"
-              className="py-3 text-xs font-semibold uppercase tracking-wider text-[#0F4C3A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F4C3A]"
+              className="min-h-11 min-w-11 px-2 py-3 text-xs font-semibold uppercase tracking-wider text-[#0F4C3A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F4C3A]"
             >
-              Go
+              {t("go")}
             </button>
           </div>
         </form>
@@ -119,7 +128,7 @@ export default function MobileNav() {
           {primaryNavigation.map((item) => (
             <li key={item.label}>
               <Link
-                href={item.href}
+                href={localizeHref(item.href, locale)}
                 onClick={() => closeMenu()}
                 aria-current={
                   isNavigationItemActive(pathname, item) ? "page" : undefined
@@ -130,16 +139,16 @@ export default function MobileNav() {
                     : "border-transparent text-[#1C1C1C]/80"
                 }`}
               >
-                {item.label}
+                {t(item.translationKey)}
               </Link>
             </li>
           ))}
         </ul>
 
-        <p className="mt-auto text-xs uppercase tracking-[0.2em] text-[#1C1C1C]/40">
+        <p className="mt-auto text-xs uppercase tracking-[0.2em] text-[#1C1C1C]/70">
           Kampala — Milano
         </p>
-      </nav>
+      </nav> : null}
     </div>
   );
 }

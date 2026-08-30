@@ -25,7 +25,7 @@ export default function ProductGallery({
         aspectRatio="portrait"
         priority
         zoomOnHover={false}
-        className="w-full rounded-sm border border-neutral-200/60 shadow-sm"
+        className="w-full border border-black/8 bg-[#ede8de] shadow-[0_18px_50px_rgba(30,24,15,.08)]"
       />
 
       {galleryImages.length > 1 && (

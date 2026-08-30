@@ -4,6 +4,8 @@ import clsx from "clsx";
 import type { Product, CartProduct } from "@/lib/commerce/types";
 import { MediaImage } from "./MediaImage";
 import { Price } from "./Price";
+import {useLocale, useTranslations} from "next-intl";
+import {localizeHref} from "@/lib/i18n";
 
 export interface ProductCardProps {
   product: Product | CartProduct;
@@ -11,6 +13,7 @@ export interface ProductCardProps {
   className?: string;
   aspectRatio?: "square" | "portrait" | "landscape";
   showQuickView?: boolean;
+  commerceEnabled?: boolean;
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({
@@ -18,21 +21,24 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   originBadge = "UGANDA → ITALY ATELIER",
   className,
   aspectRatio = "portrait",
+  commerceEnabled = true,
 }) => {
+  const locale = useLocale();
+  const t = useTranslations("Product");
   const isFullProduct = "priceRange" in product;
   const price = isFullProduct ? (product as Product).priceRange.minVariantPrice : null;
   const isAvailable = isFullProduct ? (product as Product).availableForSale : true;
-  const href = `/product/${product.handle}`;
+  const href = localizeHref(`/product/${product.handle}`, locale);
   const image = product.featuredImage;
 
   return (
-    <div className={clsx("group flex flex-col transition-all duration-300", className)}>
+    <article className={clsx("group flex flex-col transition-all duration-300", className)}>
       <Link href={href} className="block relative focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--forest-green)]">
         <MediaImage
           image={image}
           aspectRatio={aspectRatio}
           zoomOnHover
-          className={clsx("rounded-sm", !isAvailable && "opacity-60")}
+          className={clsx("border border-black/8 bg-[#ede8de]", !isAvailable && "opacity-60")}
         />
         {originBadge && (
           <span className="absolute top-3 left-3 bg-[var(--charcoal)]/90 backdrop-blur-md text-[var(--warm-ivory)] text-[10px] font-sans font-semibold tracking-[0.2em] px-2.5 py-1 uppercase rounded-xs">
@@ -41,7 +47,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         )}
         {!isAvailable && (
           <span className="absolute top-3 right-3 bg-[var(--warm-ivory)]/95 backdrop-blur-md text-[var(--charcoal)] text-[10px] font-sans font-semibold tracking-[0.2em] px-2.5 py-1 uppercase rounded-xs">
-            Sold Out
+            {t("soldOut")}
           </span>
         )}
       </Link>
@@ -57,17 +63,17 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             {(product as Product).description}
           </p>
         )}
-        <div className="mt-3 pt-2 border-t border-neutral-200/60 flex items-center justify-between">
-          {price ? (
+        <div className="mt-4 flex items-center justify-between border-t border-black/10 pt-3">
+          {commerceEnabled && price ? (
             <Price price={price} />
           ) : (
-            <span className="text-xs font-sans text-neutral-400">View Atelier Piece</span>
+            <span className="text-xs font-sans text-neutral-500">{commerceEnabled ? t("viewPiece") : t("previewCatalog")}</span>
           )}
           <span className="text-xs font-sans text-[var(--heritage-gold)] font-medium tracking-wider uppercase group-hover:translate-x-1 transition-transform duration-200">
-            Explore →
+            {t("explore")} →
           </span>
         </div>
       </div>
-    </div>
+    </article>
   );
 };
